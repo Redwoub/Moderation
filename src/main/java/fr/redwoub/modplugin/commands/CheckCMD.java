@@ -16,8 +16,6 @@ import org.bukkit.inventory.ItemStack;
 
 public class CheckCMD implements CommandExecutor, Listener {
 
-    String target;
-
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args){
 
@@ -46,6 +44,8 @@ public class CheckCMD implements CommandExecutor, Listener {
         inv.setItem(21, new ItemBuilder(Material.PACKED_ICE).setName("§6Freeze this player").toItemStack());
         inv.setItem(23, new ItemBuilder(Material.ICE).setName("§6Unfreeze this player").toItemStack());
         inv.setItem(25, new ItemBuilder(Material.BLAZE_ROD).setName("§6Kill this player").toItemStack());
+        inv.setItem(38, new ItemBuilder(Material.EYE_OF_ENDER).setName("§6Open inventory to this player").toItemStack());
+        inv.setItem(40, new ItemBuilder(Material.ENDER_PEARL).setName("§6Teleport to this player").toItemStack());
 
         return false;
     }
@@ -61,9 +61,8 @@ public class CheckCMD implements CommandExecutor, Listener {
                 case REDSTONE:
                     if(!itemStack.hasItemMeta()) return;
                     if(itemStack.getItemMeta().getDisplayName().equals("§6Alert this player")){
-                        target = inv.getName().substring(8);
-                        if(Bukkit.getPlayer(target) == null) return;
-                        Player targetName = Bukkit.getPlayer(target);
+                        if(Bukkit.getPlayer(inv.getName().substring(8)) == null) return;
+                        Player targetName = Bukkit.getPlayer(inv.getName().substring(8));
                         targetName.sendMessage("§c§lStop cheat !\n" + "§cPlease go discord : /discord");
                         event.setCancelled(true);
                         return;
@@ -73,9 +72,8 @@ public class CheckCMD implements CommandExecutor, Listener {
                 case PACKED_ICE:
                     if(!itemStack.hasItemMeta()) return;
                     if(itemStack.getItemMeta().getDisplayName().equals("§6Freeze this player")){
-                        target = inv.getName().substring(8);
-                        if(Bukkit.getPlayer(target) == null) return;
-                        Player targe = Bukkit.getPlayer(target);
+                        if(Bukkit.getPlayer(inv.getName().substring(8)) == null) return;
+                        Player targe = Bukkit.getPlayer(inv.getName().substring(8));
                         Freeze.setFreeze(targe, true);
                         player.sendMessage("§aYou have freeze this player");
                         event.setCancelled(true);
@@ -86,9 +84,8 @@ public class CheckCMD implements CommandExecutor, Listener {
                 case ICE:
                     if(!itemStack.hasItemMeta()) return;
                     if(itemStack.getItemMeta().getDisplayName().equals("§6Unfreeze this player")){
-                        target = inv.getName().substring(8);
-                        if (Bukkit.getPlayer(target) == null) return;
-                        Player tar = Bukkit.getPlayer(target);
+                        if (Bukkit.getPlayer(inv.getName().substring(8)) == null) return;
+                        Player tar = Bukkit.getPlayer(inv.getName().substring(8));
                         Freeze.setFreeze(tar, false);
                         player.sendMessage("§aYou have unfreeze this player");
                         event.setCancelled(true);
@@ -99,14 +96,37 @@ public class CheckCMD implements CommandExecutor, Listener {
                 case BLAZE_ROD:
                     if(!itemStack.hasItemMeta()) return;
                     if(itemStack.getItemMeta().getDisplayName().equals("§6Kill this player")){
-                        target = inv.getName().substring(8);
-                        if(Bukkit.getPlayer(target) == null) return;
-                        Player tart = Bukkit.getPlayer(target);
+                        if(Bukkit.getPlayer(inv.getName().substring(8)) == null) return;
+                        Player tart = Bukkit.getPlayer(inv.getName().substring(8));
                         tart.setHealth(0);
                         player.sendMessage("§aYou killed this player well");
                         event.setCancelled(true);
                         return;
                     }
+                    break;
+
+                case EYE_OF_ENDER:
+                    if(!itemStack.hasItemMeta()) return;
+                    if(itemStack.getItemMeta().getDisplayName().equals("§6Open inventory to this player")){
+                        if(Bukkit.getPlayer(inv.getName().substring(8)) == null) return;
+                        Player target = Bukkit.getPlayer(inv.getName().substring(8));
+                        player.openInventory(target.getInventory());
+                        event.setCancelled(true);
+                        return;
+
+                    }
+                    break;
+
+                case ENDER_PEARL:
+                    if(!itemStack.hasItemMeta()) return;
+                    if(itemStack.getItemMeta().getDisplayName().equals("§6Teleport to this player")){
+                        if(Bukkit.getPlayer(inv.getName().substring(8)) == null) return;
+                            Player targ = Bukkit.getPlayer(inv.getName().substring(8));
+                            player.teleport(targ.getLocation());
+                            player.sendMessage("§aTeleportation to " + targ.getName());
+                            event.setCancelled(true);
+                            return;
+                        }
                     break;
                 default: break;
             }
