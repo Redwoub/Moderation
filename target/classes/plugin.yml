@@ -1,8 +1,0 @@
-name: ModPlugin
-version: 1.0
-author: Redwoub
-main: fr.redwoub.modplugin.Main
-commands:
-  check:
-    permission-message: §cYou don't have permission
-    permission: mod.use
