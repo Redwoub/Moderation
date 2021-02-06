@@ -6,3 +6,7 @@ commands:
   check:
     permission-message: §cYou don't have permission
     permission: mod.use
+  discord:
+  vanish:
+    permission: mod.use
+    permission-message: §cYou don't have permission
