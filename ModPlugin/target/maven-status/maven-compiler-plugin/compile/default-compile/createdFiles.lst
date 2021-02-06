@@ -1,0 +1,6 @@
+fr\redwoub\modplugin\commands\CheckCMD.class
+fr\redwoub\modplugin\managers\PlayerManager.class
+fr\redwoub\modplugin\utils\ItemBuilder.class
+fr\redwoub\modplugin\commands\CheckCMD$1.class
+fr\redwoub\modplugin\Main.class
+fr\redwoub\modplugin\utils\Freeze.class
