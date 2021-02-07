@@ -56,6 +56,10 @@ public class CheckCMD implements CommandExecutor, Listener {
 
         //Create and complete Sanction inventory
         sanction = Bukkit.createInventory(null, 9*6, "§4Sanctionfor : " + target.getName());
+        sanction.setItem(19, new ItemBuilder(Material.IRON_SWORD).setName("§6Ban this player for 1 month").toItemStack());
+        sanction.setItem(21, new ItemBuilder(Material.DIAMOND_SWORD).setName("§6Ban this player").toItemStack());
+        //mute 1day
+        //mute perm
 
         return false;
     }
@@ -180,7 +184,27 @@ public class CheckCMD implements CommandExecutor, Listener {
 
         if(inv.getName().contains("§4Sanctionfor")){
             switch(itemStack.getType()){
+                case IRON_SWORD:
+                    if(!itemStack.hasItemMeta()) return;
+                    if(itemStack.getItemMeta().getDisplayName().equals("§6Ban this player for 1 month")){
+                        //todo
+                        player.sendMessage("§aThis player was banned for 1 month !");
+                        event.setCancelled(true);
+                        return;
+                    }
+                    break;
 
+                case DIAMOND:
+                    if(!itemStack.hasItemMeta()) return;
+                    if(itemStack.getItemMeta().getDisplayName().equals("§6Ban this player")){
+                        if(Bukkit.getPlayer(inv.getName().substring(16)) == null) return;
+                        Player target = Bukkit.getPlayer(inv.getName().substring(16));
+                        target.setBanned(true);
+                        player.sendMessage("This player was banned");
+                        event.setCancelled(true);
+                        return;
+                    }
+                    break;
                 default: break;
             }
         }
