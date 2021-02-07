@@ -15,6 +15,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 public class CheckCMD implements CommandExecutor, Listener {
+    private Inventory sanction;
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args){
@@ -38,6 +39,9 @@ public class CheckCMD implements CommandExecutor, Listener {
         }
 
         Player target = Bukkit.getPlayer(args[0]);
+
+        //Create and complete Check inventory
+
         Inventory inv = Bukkit.createInventory(null, 9*6, "§aCheck " + target.getName());
         player.openInventory(inv);
         inv.setItem(19, new ItemBuilder(Material.REDSTONE).setName("§6Alert this player").toItemStack());
@@ -46,12 +50,18 @@ public class CheckCMD implements CommandExecutor, Listener {
         inv.setItem(25, new ItemBuilder(Material.BLAZE_ROD).setName("§6Kill this player").toItemStack());
         inv.setItem(38, new ItemBuilder(Material.EYE_OF_ENDER).setName("§6Open inventory to this player").toItemStack());
         inv.setItem(40, new ItemBuilder(Material.ENDER_PEARL).setName("§6Teleport to this player").toItemStack());
+        inv.setItem(42, new ItemBuilder(Material.ARROW).setName("§6Kick this player").toItemStack());
+        inv.setItem(53, new ItemBuilder(Material.BARRIER).setName("§6Close this menu").toItemStack());
+        inv.setItem(4, new ItemBuilder(Material.STRING).setName("§cSanction").toItemStack());
+
+        //Create and complete Sanction inventory
+        sanction = Bukkit.createInventory(null, 9*6, "§4Sanctionfor : " + target.getName());
 
         return false;
     }
 
     @EventHandler
-    public void onInterract(InventoryClickEvent event){
+    public void onInterractCheckInventory(InventoryClickEvent event){
         Inventory inv = event.getInventory();
         Player player = (Player) event.getWhoClicked();
         ItemStack itemStack = event.getCurrentItem();
@@ -128,6 +138,49 @@ public class CheckCMD implements CommandExecutor, Listener {
                             return;
                         }
                     break;
+
+                case ARROW:
+                    if(!itemStack.hasItemMeta()) return;
+                    if(itemStack.getItemMeta().getDisplayName().equals("§6Kick this player")){
+                        if(Bukkit.getPlayer(inv.getName().substring(8)) == null) return;
+                        Player target = Bukkit.getPlayer(inv.getName().substring(8));
+                        target.kickPlayer("§cKick with moderator !\n" + "§cplease go to discord !");
+                        event.setCancelled(true);
+                        return;
+                    }
+                    break;
+
+                case BARRIER:
+                    if(!itemStack.hasItemMeta()) return;
+                    if(itemStack.getItemMeta().getDisplayName().equals("§6Close this menu")){
+                        player.closeInventory();
+                        event.setCancelled(true);
+                        return;
+                    }
+                    break;
+
+                case STRING:
+                    if(!itemStack.hasItemMeta()) return;
+                    if(itemStack.getItemMeta().getDisplayName().equals("§cSanction")){
+                        player.closeInventory();
+                        event.setCancelled(true);
+                        player.openInventory(sanction);
+                        return;
+                    }
+                    break;
+                default: break;
+            }
+        }
+    }
+
+    public void onInterractSanctionInventory(InventoryClickEvent event){
+        Player player = (Player) event.getWhoClicked();
+        Inventory inv = event.getInventory();
+        ItemStack itemStack = event.getCurrentItem();
+
+        if(inv.getName().contains("§4Sanctionfor")){
+            switch(itemStack.getType()){
+
                 default: break;
             }
         }
