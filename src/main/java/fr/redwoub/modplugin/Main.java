@@ -1,10 +1,9 @@
 package fr.redwoub.modplugin;
 
 
-import fr.redwoub.modplugin.commands.CheckCMD;
-import fr.redwoub.modplugin.commands.DiscordCMD;
-import fr.redwoub.modplugin.commands.VanishCMD;
-import fr.redwoub.modplugin.managers.PlayerManager;
+
+
+import fr.redwoub.modplugin.managers.RegisterManager;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
@@ -17,14 +16,8 @@ public class Main extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
-
-        getCommand("check").setExecutor(new CheckCMD());
-        getCommand("discord").setExecutor(new DiscordCMD());
-        getCommand("vanish").setExecutor(new VanishCMD());
-        getServer().getPluginManager().registerEvents(new CheckCMD(), this);
-        getServer().getPluginManager().registerEvents(new PlayerManager(), this);
-
         createFileDiscord();
+        new RegisterManager().onRegister();
     }
 
     @Override
@@ -57,7 +50,7 @@ public class Main extends JavaPlugin {
         return instance;
     }
 
-    public  File getFileDiscord(){
+    public File getFileDiscord(){
         return filediscord;
     }
 }
