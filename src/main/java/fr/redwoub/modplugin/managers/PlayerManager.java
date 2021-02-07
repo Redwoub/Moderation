@@ -3,13 +3,17 @@ package fr.redwoub.modplugin.managers;
 import fr.redwoub.modplugin.commands.VanishCMD;
 import fr.redwoub.modplugin.utils.Freeze;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 public class PlayerManager implements Listener {
+    private VanishCMD vanishCMD = new VanishCMD();
 
     @EventHandler
     public void onMove(PlayerMoveEvent event){
@@ -26,8 +30,18 @@ public class PlayerManager implements Listener {
         Player player = event.getPlayer();
         if(!player.hasPermission("mod.use")){
             for(Player players : Bukkit.getOnlinePlayers()){
-                players.hidePlayer(VanishCMD.getPlayer(VanishCMD.playerVanish));
+                if(vanishCMD.playerVanish.isEmpty()) return;
+                players.hidePlayer(vanishCMD.getPlayer(vanishCMD.playerVanish));
             }
+
+        }
+    }
+
+    @EventHandler
+    public void onLeft(PlayerQuitEvent event){
+        Player player = event.getPlayer();
+        if(vanishCMD.playerVanish.contains(player)){
+            vanishCMD.playerVanish.remove(player);
         }
     }
 }
